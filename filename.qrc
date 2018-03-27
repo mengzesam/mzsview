@@ -1,0 +1,7 @@
+
+  <RCC>
+      <qresource prefix="/">
+          <file alias="datafile">data.csv</file>
+      </qresource>
+  </RCC>
+
