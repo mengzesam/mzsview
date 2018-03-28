@@ -31,6 +31,9 @@ namespace mzsview {
     const static char CURSOR_FORMAT[]="hh:mm:ss";
     const static char AXISX_TITLE[]="time";
     const static char AXISY_TITLE[]="data %";
+    const static int NORMAL_LINEWIDTH=0;
+    const static int BOLD_LINEWIDTH=2;
+    const static int TICKCOUNT=10;
     const static char DATA_DELIMITER[]=",";
 }
 

@@ -11,11 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui.setupUi(this);
     initModel();
-    getTags();
-    this->setWindowTitle(QString("%1@mzsview").arg(m_datafile));
+    connect(m_ui.action_Open,&QAction::triggered,this,&MainWindow::openFile);
     connect(m_ui.plotview,&PlotView::cursorValueChanged,this,&MainWindow::getCursorValue);
     connect(m_ui.plotview,&PlotView::tagValueChanged,this,&MainWindow::setTagValue);
-    loadView();
     connect(m_model,&QStandardItemModel::dataChanged,this,&MainWindow::modelDataChanged);
     connect(this,&MainWindow::dataChangedSignal,m_ui.plotview,&PlotView::modelDataChanged);
 }
@@ -62,7 +60,7 @@ void MainWindow::initModel()
     m_ui.tableView->setItemDelegateForColumn(mzsview::COLOR_COLUMN,colordelegate);
 }
 
-int MainWindow::loadView(){
+int MainWindow::updateView(){
     m_ui.plotview->setDatafile(m_datafile);
     m_ui.plotview->loadChart();
     return 0;
@@ -71,7 +69,7 @@ int MainWindow::loadView(){
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     resize(event->size());
-    int height=event->size().height()-20;
+    int height=event->size().height();
     int width=event->size().width();
     m_ui.plotview->setGeometry(QRect(mzsview::PADDING, 0, width-2*mzsview::PADDING,
                                       height-mzsview::TABLE_HEIGHT-mzsview::PADDING));
@@ -81,7 +79,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     for(int i=0;i<mzsview::COLUMNS;i++){
         m_ui.tableView->setColumnWidth(i,int(table_width*mzsview::COLUMN_WIDTH[i]/100.0));
     }
-    int row_height=m_ui.tableView->size().height()/(m_rowCount+1);
+    int row_height=m_ui.tableView->size().height()/(m_rowCount+3);
     for(int i=0;i<m_rowCount;i++){
         m_ui.tableView->setRowHeight(i,row_height);
     }
@@ -177,6 +175,16 @@ void MainWindow::modelDataChanged(const QModelIndex &topLeft)
 }
 
 
+void MainWindow::openFile()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+        tr("Open data file"), "/", tr("Image Files (*.txt *.csv *.dat)"));
+    qDebug()<<filename;
+    m_datafile=filename;
+    getTags();
+    this->setWindowTitle(QString("%1@mzsview").arg(m_datafile));
+    updateView();
+}
 
 
 

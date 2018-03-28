@@ -1,13 +1,12 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-03-15T12:12:07
+# Project created by QtCreator 2018-03-29T02:52:51
 #
 #-------------------------------------------------
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets \
-                                        charts
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts
 
 TARGET = mzsview
 TEMPLATE = app
@@ -27,20 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    plotview.cpp \
+    checkdelegate.cpp \
     colordelegate.cpp \
     comboboxdelegate.cpp \
-    checkdelegate.cpp
+    plotview.cpp
 
 HEADERS += \
         mainwindow.h \
     plotview.h \
+    checkdelegate.h \
     colordelegate.h \
     comboboxdelegate.h \
-    mzsviewglobal.h \
-    checkdelegate.h
+    mzsviewglobal.h
 
-FORMS +=mainwindow.ui
-
-RESOURCES += \
-    filename.qrc
+FORMS += \
+        mainwindow.ui

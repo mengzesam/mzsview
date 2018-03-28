@@ -4,12 +4,13 @@ PlotView::PlotView(QWidget *parent) :
       QChartView(parent),
       m_chart(new QChart),
       m_datafile(QString("")),
-      m_cursor_left(new QLineSeries()),
-      m_cursor_right(new QLineSeries()),
+      m_cursor_left(new LineType()),
+      m_cursor_right(new LineType()),
       m_cursor_picked(NULL),
       m_status(new QGraphicsSimpleTextItem(m_chart)),
       m_minY(0),
       m_maxY(100),
+      m_isinitchart(false),
       m_isloadchart(false),
       m_filevalid(false),
       m_pickedIndex(0),
@@ -21,6 +22,7 @@ PlotView::PlotView(QWidget *parent) :
     }
     setDragMode(QChartView::NoDrag);
     setMouseTracking(true);
+    initChart();
 }
 
 int PlotView::setDatafile(QString filename)
@@ -36,11 +38,64 @@ int PlotView::setDatafile(QString filename)
     return 0;
 }
 
-int PlotView::loadChart()
+void PlotView::initChart()
+{
+    for(int i=0;i<mzsview::ROWS;i++){
+       LineType* line=new LineType;
+       QPen pen=line->pen();
+       pen.setWidth(mzsview::NORMAL_LINEWIDTH);
+       line->setPen(pen);
+       line->setColor(QColor(mzsview::DEFAULT_COLORS[i]));
+       m_chart->addSeries(line);
+    }
+    m_chart->addSeries(m_cursor_left);
+    m_chart->addSeries(m_cursor_right);
+    m_chart->legend()->hide();
+    QDateTimeAxis *axisX = new QDateTimeAxis;
+    axisX->setTickCount(mzsview::TICKCOUNT);
+    axisX->setFormat(mzsview::AXISX_FORMAT);
+    axisX->setTitleText(mzsview::AXISX_TITLE);
+    m_chart->addAxis(axisX, Qt::AlignBottom);
+    for(int i=0;i<mzsview::ROWS;i++){
+        m_chart->series().at(i)->attachAxis(axisX);
+    }
+    m_cursor_left->attachAxis(axisX);
+    m_cursor_right->attachAxis(axisX);
+    QValueAxis *axisY = new QValueAxis;
+    axisY->setLabelFormat(mzsview::AXISY_FORMAT);
+    axisY->setTitleText(mzsview::AXISY_TITLE);
+    axisY->setMin(m_minY);
+    axisY->setMax(m_maxY);
+    m_chart->addAxis(axisY, Qt::AlignLeft);
+    for(int i=0;i<mzsview::ROWS;i++){
+        m_chart->series().at(i)->attachAxis(axisY);
+    }
+    m_cursor_left->attachAxis(axisY);
+    m_cursor_right->attachAxis(axisY);
+    setChart(m_chart);
+    setRenderHint(QPainter::Antialiasing);
+    for(int i=0;i<mzsview::ROWS;i++){
+        connect((LineType*)m_chart->series().at(i), &LineType::clicked, this
+                ,[=](){m_prePickedIndex=m_pickedIndex;m_pickedIndex=i;pickLine();});
+    }
+    m_isinitchart=true;
+}
+
+void PlotView::emptyChart()
+{
+    if(m_isinitchart){
+        for(int i=0;i<m_chart->series().size();i++){
+            ((LineType*)m_chart->series().at(i))->clear();
+        }
+    }
+    m_isloadchart=false;
+}
+
+int PlotView::setAllLineData()
 {
     if(!m_filevalid)
         return -1;
-    QList<QLineSeries*> series;
+
     QFile datafile(m_datafile);
     if (!datafile.open(QIODevice::ReadOnly | QIODevice::Text)) {
          return -1;
@@ -57,12 +112,15 @@ int PlotView::loadChart()
         datafile.close();
         return -1;
     }
-     for(int i=1;i<values.size() && i<=mzsview::ROWS;i++){
-        series.append(new QLineSeries);
-        series.at(i-1)->setName(values.at(i));
-        emitTagChangedSignal(i-1,values.at(i));
+
+    emptyChart();
+
+    for(int i=0;i<values.size()-1 && i<mzsview::ROWS;i++){
+        m_chart->series().at(i)->setName(values.at(i+1));
+        emitTagChangedSignal(i,values.at(i+1));
     }
     QDateTime momentInTime;
+    LineType* p_line;
     while (!stream.atEnd()) {
         line = (stream.readLine()).trimmed();
         if(line.isEmpty())
@@ -78,59 +136,91 @@ int PlotView::loadChart()
             if(abs(m_values_max[i]-m_values_min[i])>mzsview::ERR){
                 y=(y-m_values_min[i])/(m_values_max[i]-m_values_min[i])*100.0;
             }
-            series.at(i)->append(momentInTime.toMSecsSinceEpoch(),y);
+            p_line=(LineType*)m_chart->series().at(i);
+            p_line->append(momentInTime.toMSecsSinceEpoch(),y);
         }
     }
     datafile.close();
-    for(int i=1;i<values.size() && i<=mzsview::ROWS;i++){
-        m_chart->addSeries(series.at(i-1));
-    }
-    m_cursor_left->append(series.at(0)->at(0).x(),m_minY);
-    m_cursor_left->append(series.at(0)->at(0).x(),m_maxY);
-    m_cursor_right->append(series.at(0)->at(series.at(0)->count()-1).x(),m_minY);
-    m_cursor_right->append(series.at(0)->at(series.at(0)->count()-1).x(),m_maxY);
-    m_chart->addSeries(m_cursor_left);
-    m_chart->addSeries(m_cursor_right);
-    m_cursor_picked=NULL;
-    m_chart->legend()->hide();
-    QDateTimeAxis *axisX = new QDateTimeAxis;
-    axisX->setTickCount(10);
-    axisX->setFormat(mzsview::AXISX_FORMAT);
-    axisX->setTitleText(mzsview::AXISX_TITLE);
-    m_chart->addAxis(axisX, Qt::AlignBottom);
-    for(int i=1;i<values.size() && i<=mzsview::ROWS;i++){
-        series.at(i-1)->attachAxis(axisX);
-    }
-    m_cursor_left->attachAxis(axisX);
-    m_cursor_right->attachAxis(axisX);
-    QValueAxis *axisY = new QValueAxis;
-    axisY->setLabelFormat(mzsview::AXISY_FORMAT);
-    axisY->setTitleText(mzsview::AXISY_TITLE);
-    axisY->setMin(m_minY);
-    axisY->setMax(m_maxY);
-    m_chart->addAxis(axisY, Qt::AlignLeft);
-    for(int i=1;i<values.size() && i<=mzsview::ROWS;i++){
-        series.at(i-1)->attachAxis(axisY);
-    }
-    m_cursor_left->attachAxis(axisY);
-    m_cursor_right->attachAxis(axisY);
-    setChart(m_chart);
-    setRenderHint(QPainter::Antialiasing);    
-    for(int i=1;i<values.size() && i<=mzsview::ROWS;i++){
-        connect(series.at(i-1), &QLineSeries::clicked, this
-                ,[=](){m_prePickedIndex=m_pickedIndex;m_pickedIndex=i-1;pickLine();});
-    }
-    QString stime0=QDateTime::fromMSecsSinceEpoch(m_cursor_left->at(0).x()).toString(mzsview::CURSOR_FORMAT);
-    QString stime1=QDateTime::fromMSecsSinceEpoch(m_cursor_right->at(0).x()).toString(mzsview::CURSOR_FORMAT);
-    m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
-    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));
-    m_isloadchart=true;
-    emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,series.at(0)->at(0).x());
-    emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,series.at(0)->at(series.at(0)->count()-1).x());
     return 0;
 }
 
-int PlotView::findYbyX(QLineSeries *series,int series_index,double x,double& y)//series point.x must be sorted by ascend
+int PlotView::setLineData(int line_No, int field_index)
+{
+    if(field_index<0 || line_No<0 || line_No>=m_chart->series().size()-2)
+        return -1;
+    if(!m_filevalid)
+        return -1;
+
+    QFile datafile(m_datafile);
+    if (!datafile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+         return -1;
+     }
+    QTextStream stream(&datafile);
+    QString line = (stream.readLine()).trimmed();
+    QStringList values;
+    if(line.isEmpty()){
+        datafile.close();
+        return -1;
+    }
+    values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+    if(values.size()<2 ||values.size()<=field_index){
+        datafile.close();
+        return -1;
+    }
+    m_chart->series().at(line_No)->setName(values.at(field_index));
+    QDateTime momentInTime;
+    LineType* p_line=(LineType*)m_chart->series().at(line_No);
+    while (!stream.atEnd()) {
+        line = (stream.readLine()).trimmed();
+        if(line.isEmpty()) continue;
+        values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+        if(values.size()<2 ||values.size()<=field_index) continue;
+        momentInTime=QDateTime::fromString(values[0],mzsview::DATETIME_FORMAT);
+        if(!momentInTime.isValid()) continue;
+        double y=values[field_index].toDouble();
+        if(abs(m_values_max[line_No]-m_values_min[line_No])>mzsview::ERR){
+            y=(y-m_values_min[line_No])/(m_values_max[line_No]-m_values_min[line_No])*100.0;
+        }
+        p_line->append(momentInTime.toMSecsSinceEpoch(),y);
+    }
+    datafile.close();
+    return 0;
+}
+
+int PlotView::loadChart()
+{
+    if(setAllLineData()!=0)
+        return -1;
+    LineType* p_line=NULL;
+    for(int i=0;i<m_chart->series().size()-2;i++){
+        p_line=(LineType*)m_chart->series().at(i);
+        if(p_line->count()>1)
+            break;
+    }
+    double x_left=0.0;
+    double x_right=0.0;
+    if(p_line!=NULL && p_line->count()>1){
+        x_left=p_line->at(0).x();
+        x_right=p_line->at(p_line->count()-1).x();
+    }
+    m_cursor_left->append(x_left,m_minY);
+    m_cursor_left->append(x_left,m_maxY);
+    m_cursor_right->append(x_right,m_minY);
+    m_cursor_right->append(x_right,m_maxY);
+    m_chart->axisX()->setMin(QDateTime::fromMSecsSinceEpoch(x_left));
+    m_chart->axisX()->setMax(QDateTime::fromMSecsSinceEpoch(x_right));
+    QString stime0=QDateTime::fromMSecsSinceEpoch(x_left).toString(mzsview::CURSOR_FORMAT);
+    QString stime1=QDateTime::fromMSecsSinceEpoch(x_right).toString(mzsview::CURSOR_FORMAT);
+    m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
+    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));    
+    m_cursor_picked=NULL;
+    m_isloadchart=true;
+    emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,x_left);
+    emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,x_right);
+    return 0;
+}
+
+int PlotView::findYbyX(LineType *series,int series_index,double x,double& y)//series point.x must be sorted by ascend
 {
     if(series==NULL)
         return -1;
@@ -207,7 +297,7 @@ void PlotView::mouseDoubleClickEvent(QMouseEvent *event)
         double xl=m_cursor_left->at(0).x();
         double xr=m_cursor_right->at(0).x();
         int cursor_column;
-        QLineSeries *mycursor;
+        LineType *mycursor;
         if(abs(x-xl)<=abs(x-xr)){
             mycursor=m_cursor_left;
             cursor_column=mzsview::CURSOR1_COLUMN;
@@ -237,14 +327,14 @@ void PlotView::pickLine()
         QString ss=m_chart->series().at(m_pickedIndex)->name();
         m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
         m_status->setText(QString("PickedLine:%1").arg(ss));
-        QLineSeries * picked=(QLineSeries *)m_chart->series().at(m_pickedIndex);
+        LineType * picked=(LineType *)m_chart->series().at(m_pickedIndex);
         QPen pen=picked->pen();
-        pen.setWidth(3.5);
+        pen.setWidth(mzsview::BOLD_LINEWIDTH);
         picked->setPen(pen);
         if(m_pickedIndex!=m_prePickedIndex){
-            picked=(QLineSeries *)m_chart->series().at(m_prePickedIndex);
+            picked=(LineType *)m_chart->series().at(m_prePickedIndex);
             pen=picked->pen();
-            pen.setWidth(2.0);
+            pen.setWidth(mzsview::NORMAL_LINEWIDTH);
             picked->setPen(pen);
         }
     }
@@ -257,7 +347,7 @@ void PlotView::emitCursorChangedSignal(int cursor_column,double cursorX)
         int n=m_chart->series().size()-2;
         double y;
         for(int i=0;i<n;i++){
-            findYbyX((QLineSeries *)m_chart->series().at(i),i,cursorX,y);
+            findYbyX((LineType *)m_chart->series().at(i),i,cursorX,y);
             y_list.append(y);
         }
         emit cursorValueChanged(cursor_column,y_list);
@@ -276,10 +366,12 @@ void PlotView::modelDataChanged(const int row_index, const QString &tag, int tag
 {
     if(m_isloadchart && select_state==2){//2(Qt::Checked) is be checked
         int n=m_chart->series().size()-2;
-        QLineSeries* line;
+        bool is_line_changed=true;
+        LineType* line;
         if(row_index<n){//line is existed
-            line=(QLineSeries *)m_chart->series().at(row_index);
+            line=(LineType *)m_chart->series().at(row_index);
             if(line->name()==tag){//tag is not changed
+                is_line_changed=false;
                 if((abs(max-m_values_max[row_index])>mzsview::ERR
                         || abs(min-m_values_min[row_index])>mzsview::ERR)
                     && abs(max-min)>mzsview::ERR){//min or max is changed
@@ -296,12 +388,25 @@ void PlotView::modelDataChanged(const int row_index, const QString &tag, int tag
                 line->clear();
             }//if tag is not changed
         }else{
-            line=new QLineSeries;
+            line=new LineType;
             m_chart->series().insert(row_index,line);
         }//if line is existed
         m_values_max[row_index]=max;
         m_values_min[row_index]=min;
-        //update line
+        if(is_line_changed){//update line
+            if(setLineData(row_index,tag_field_index)==0){
+                double x_left=m_cursor_left->at(0).x();
+                double x_right=m_cursor_right->at(0).x();
+                emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,x_left);
+                emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,x_right);
+            }
+        }
         line->setColor(QColor(color));
-    }//if m_isloadchart && select_state==2
+        line->setVisible();
+    }else if(m_isloadchart && select_state==0){//0(Qt::Unchecked) is be unchecked
+        int n=m_chart->series().size()-2;
+        if(row_index<n){//line is existed,hide it
+            m_chart->series().at(row_index)->hide();
+        }
+    }
 }

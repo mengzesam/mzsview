@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>573</height>
+    <width>884</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,20 +17,20 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>330</y>
-      <width>761</width>
-      <height>201</height>
+      <x>0</x>
+      <y>350</y>
+      <width>871</width>
+      <height>231</height>
      </rect>
     </property>
    </widget>
    <widget class="PlotView" name="plotview" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>-10</x>
       <y>0</y>
-      <width>759</width>
-      <height>319</height>
+      <width>881</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
@@ -40,10 +40,17 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>778</width>
+     <width>884</width>
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuF_ile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Open"/>
+   </widget>
+   <addaction name="menuF_ile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -54,6 +61,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_Open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

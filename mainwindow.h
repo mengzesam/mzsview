@@ -14,6 +14,7 @@
 #include <QDateTimeAxis>
 #include <QValueAxis>
 #include <QHash>
+#include <QFileDialog>
 #include <QDebug>
 
 namespace Ui {
@@ -27,13 +28,14 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     void initModel();
-    int loadView();
+    int updateView();
     int getTags();
 
-public slots:
+private slots:
     void getCursorValue(int cursorColumn,QList<double> y_list);
     void setTagValue(int rowIndex,const QString& tag);
     void modelDataChanged(const QModelIndex &topLeft);
+    void openFile();
 
 signals:
     void dataChangedSignal(const int row_index,const QString &tag,int tag_field_index,
@@ -54,5 +56,6 @@ private:
 private://const static member
 
 };
+
 
 #endif // MAINWINDOW_H

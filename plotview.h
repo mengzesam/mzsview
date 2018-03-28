@@ -25,6 +25,7 @@ QT_CHARTS_USE_NAMESPACE
 
 //QT_BEGIN_NAMESPACE
 
+typedef QLineSeries LineType;
 
 class PlotView : public QChartView
 {
@@ -34,7 +35,6 @@ public:
     PlotView(QWidget *parent = 0);
     int setDatafile(QString filename);
     int loadChart();
-    int findYbyX(QLineSeries * series,int series_index,double x,double& y);
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -50,28 +50,33 @@ signals:
     void tagValueChanged(int rowIndex,const QString& tag);
 
 private:
+    void initChart();
+    void emptyChart();
+    int setAllLineData();
+    int setLineData(int line_No,int field_index);
+    int findYbyX(QLineSeries * series,int series_index,double x,double& y);
     void emitCursorChangedSignal(int cursorColumn,double cursorX);
     void emitTagChangedSignal(int rowIndex,const QString& tag);
 
 private:
     QChart *m_chart;
     QString m_datafile;
-    QLineSeries *m_cursor_left;
-    QLineSeries *m_cursor_right;
-    QLineSeries *m_cursor_picked;
+    LineType *m_cursor_left;
+    LineType *m_cursor_right;
+    LineType *m_cursor_picked;
     QGraphicsSimpleTextItem *m_status;
     int m_pickedIndex;
     int m_prePickedIndex;
     int m_maxY;
     int m_minY;
     bool m_isloadchart;
+    bool m_isinitchart;
     bool m_filevalid;
     double m_values_min[mzsview::ROWS];
     double m_values_max[mzsview::ROWS];
 
 private://class static member
 };
-
 
 //QT_END_NAMESPACE
 #endif // PLOTVIEW_H
