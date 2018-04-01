@@ -2,6 +2,7 @@
 #define MZSVIEWGLOBAL_H
 #include <QStringList>
 
+
 namespace mzsview {
     const static int TABLE_HEIGHT=200;
     const static int PADDING=10;

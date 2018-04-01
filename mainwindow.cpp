@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui.setupUi(this);
     initModel();
     connect(m_ui.action_Open,&QAction::triggered,this,&MainWindow::openFile);
+    connect(m_ui.actionEx_it,&QAction::triggered,this,&MainWindow::close);
+    connect(m_ui.action_Merge_Files ,&QAction::triggered,this,&MainWindow::mergeFiles);
     connect(m_ui.plotview,&PlotView::cursorValueChanged,this,&MainWindow::getCursorValue);
     connect(m_ui.plotview,&PlotView::tagValueChanged,this,&MainWindow::setTagValue);
     connect(m_model,&QStandardItemModel::dataChanged,this,&MainWindow::modelDataChanged);
@@ -121,12 +123,24 @@ int MainWindow::getTags()
     values.pop_front();
     ComboboxDelegate* cbdelegate=qobject_cast<ComboboxDelegate*>
             (m_ui.tableView->itemDelegateForColumn(mzsview::TAG_COLUMN));
+
     for(int i=0;i<mzsview::ROWS;i++){
         m_ui.tableView->closePersistentEditor(m_model->index(i,mzsview::TAG_COLUMN,QModelIndex()));
     }
     cbdelegate->setItemlist(values);
-    for(int i=0;i<mzsview::ROWS;i++){
+    QModelIndex index;
+    QStandardItem *item;
+    for(int i=0;i<values.size() && i<mzsview::ROWS;i++){
+        index=m_model->index(i,mzsview::TAG_COLUMN,QModelIndex());
+        item=m_model->itemFromIndex(index);
+        item->setFlags(item->flags()|Qt::ItemIsEditable);
         m_ui.tableView->openPersistentEditor(m_model->index(i,mzsview::TAG_COLUMN,QModelIndex()));
+    }
+    for(int i=values.size();i<mzsview::ROWS;i++){
+        index=m_model->index(i,mzsview::TAG_COLUMN,QModelIndex());
+        item=m_model->itemFromIndex(index);
+        item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+        m_model->setData(index,"",Qt::EditRole);
     }
     return 0;
 }
@@ -154,6 +168,9 @@ void MainWindow::modelDataChanged(const QModelIndex &topLeft)
        double max;
        QModelIndex index=m_model->index(row_index,mzsview::TAG_COLUMN,QModelIndex());
        tag=index.data().toString();
+       if(m_tags_hash.find(tag)==m_tags_hash.end())
+            return;//TAG not exist,not emit datachanged signal to plotview
+       tag_field_index=m_tags_hash[tag];
        index=m_model->index(row_index,mzsview::SELECT_COLUMN,QModelIndex());
        select_state=index.data().toInt();
        index=m_model->index(row_index,mzsview::PHASE_COLUMN,QModelIndex());
@@ -164,9 +181,6 @@ void MainWindow::modelDataChanged(const QModelIndex &topLeft)
        min=index.data().toDouble();
        index=m_model->index(row_index,mzsview::MAX_COLUMN,QModelIndex());
        max=index.data().toDouble();
-       if(m_tags_hash.find(tag)!=m_tags_hash.end()){
-           tag_field_index=m_tags_hash[tag];
-       }
        emit dataChangedSignal(row_index,tag,tag_field_index,select_state,phase_state,
                               color,min,max);
 //       qDebug()<<tag<<tag_field_index<<":"<<select_state<<":"<<phase_state<<":"<<color
@@ -174,17 +188,22 @@ void MainWindow::modelDataChanged(const QModelIndex &topLeft)
     }
 }
 
-
 void MainWindow::openFile()
 {
     QString filename = QFileDialog::getOpenFileName(this,
-        tr("Open data file"), "/", tr("Image Files (*.txt *.csv *.dat)"));
-    qDebug()<<filename;
+        tr("Open data file"), "D:\\", tr("Data Files (*.txt *.csv *.dat);;All Files (*.*)"));//,
+                                                    //nullptr,QFileDialog::DontUseNativeDialog);
+     if(filename.trimmed()=="")
+        return;
     m_datafile=filename;
     getTags();
     this->setWindowTitle(QString("%1@mzsview").arg(m_datafile));
     updateView();
 }
 
-
+void MainWindow::mergeFiles()
+{
+    MergeDialog mergedialog(this);//=new MergeDialog(this);
+    mergedialog.exec();
+}
 

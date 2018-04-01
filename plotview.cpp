@@ -10,6 +10,7 @@ PlotView::PlotView(QWidget *parent) :
       m_status(new QGraphicsSimpleTextItem(m_chart)),
       m_minY(0),
       m_maxY(100),
+      m_valid_lines(-1),
       m_isinitchart(false),
       m_isloadchart(false),
       m_filevalid(false),
@@ -112,10 +113,9 @@ int PlotView::setAllLineData()
         datafile.close();
         return -1;
     }
-
-    emptyChart();
-
-    for(int i=0;i<values.size()-1 && i<mzsview::ROWS;i++){
+    emptyChart();//empty data for every line series
+    m_valid_lines=mzsview::ROWS<values.size()-1?mzsview::ROWS : values.size()-1;
+    for(int i=0;i<m_valid_lines;i++){
         m_chart->series().at(i)->setName(values.at(i+1));
         emitTagChangedSignal(i,values.at(i+1));
     }
@@ -318,7 +318,7 @@ void PlotView::mouseDoubleClickEvent(QMouseEvent *event)
         m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));
         emitCursorChangedSignal(cursor_column,x);
     }
-    QChartView::mouseDoubleClickEvent(event);
+    QGraphicsView::mouseDoubleClickEvent(event);
 }
 
 void PlotView::pickLine()
@@ -344,9 +344,8 @@ void PlotView::emitCursorChangedSignal(int cursor_column,double cursorX)
 {
     if(m_isloadchart){
         QList<double> y_list;
-        int n=m_chart->series().size()-2;
         double y;
-        for(int i=0;i<n;i++){
+        for(int i=0;i<m_valid_lines;i++){
             findYbyX((LineType *)m_chart->series().at(i),i,cursorX,y);
             y_list.append(y);
         }

@@ -6,6 +6,7 @@
 #include "comboboxdelegate.h"
 #include "checkdelegate.h"
 #include "colordelegate.h"
+#include "mergedialog.h"
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include <QLineSeries>
@@ -36,6 +37,7 @@ private slots:
     void setTagValue(int rowIndex,const QString& tag);
     void modelDataChanged(const QModelIndex &topLeft);
     void openFile();
+    void mergeFiles();
 
 signals:
     void dataChangedSignal(const int row_index,const QString &tag,int tag_field_index,

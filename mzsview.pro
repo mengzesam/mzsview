@@ -29,7 +29,8 @@ SOURCES += \
     checkdelegate.cpp \
     colordelegate.cpp \
     comboboxdelegate.cpp \
-    plotview.cpp
+    plotview.cpp \
+    mergedialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,9 @@ HEADERS += \
     checkdelegate.h \
     colordelegate.h \
     comboboxdelegate.h \
-    mzsviewglobal.h
+    mzsviewglobal.h \
+    mergedialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    mergedialog.ui

@@ -69,6 +69,7 @@ private:
     int m_prePickedIndex;
     int m_maxY;
     int m_minY;
+    int m_valid_lines;
     bool m_isloadchart;
     bool m_isinitchart;
     bool m_filevalid;
