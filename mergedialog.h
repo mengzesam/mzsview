@@ -29,17 +29,10 @@ private:
 private:
     Ui::MergeDialog m_ui;
     QStandardItemModel m_model;
-    int m_head_row;
-    int m_data_start_row;
-    int m_x_column;
-    int m_y_start_column;
-    int m_y_index_infield;
-    int m_head_index_infield;
-    int m_field_length;
     bool m_selected;
 
 private://const static member
-    const static int m_max_filenum;
+    const static int M_MAX_FILENUM;
 };
 
 #endif // MERGEDIALOG_H

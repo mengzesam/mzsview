@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>390</height>
+    <width>610</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QListView" name="m_fileListView">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>240</x>
      <y>10</y>
-     <width>451</width>
+     <width>361</width>
      <height>361</height>
     </rect>
    </property>
@@ -26,41 +26,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>280</y>
-     <width>77</width>
-     <height>83</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QPushButton" name="m_selectButton">
-      <property name="text">
-       <string>Select</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="m_saveButton">
-      <property name="text">
-       <string>Save</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="m_quitButton">
-      <property name="text">
-       <string>Quit</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
      <x>10</x>
-     <y>10</y>
+     <y>230</y>
      <width>91</width>
      <height>40</height>
     </rect>
@@ -75,7 +42,7 @@
        <bool>true</bool>
       </property>
       <attribute name="buttonGroup">
-       <string notr="true">m_checkButtonGroup</string>
+       <string notr="true">m_spanCheckGroup</string>
       </attribute>
      </widget>
     </item>
@@ -88,7 +55,7 @@
        <bool>false</bool>
       </property>
       <attribute name="buttonGroup">
-       <string notr="true">m_checkButtonGroup</string>
+       <string notr="true">m_spanCheckGroup</string>
       </attribute>
      </widget>
     </item>
@@ -97,10 +64,10 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>80</y>
+     <x>110</x>
+     <y>220</y>
      <width>120</width>
-     <height>131</height>
+     <height>141</height>
     </rect>
    </property>
    <property name="title">
@@ -121,6 +88,9 @@
     <property name="checked">
      <bool>true</bool>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">m_delimiterCheckGroup</string>
+    </attribute>
    </widget>
    <widget class="QCheckBox" name="m_semiCheck">
     <property name="geometry">
@@ -134,8 +104,11 @@
     <property name="text">
      <string>;Semicolon</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">m_delimiterCheckGroup</string>
+    </attribute>
    </widget>
-   <widget class="QCheckBox" name="spaceCheck">
+   <widget class="QCheckBox" name="m_spaceCheck">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -147,8 +120,11 @@
     <property name="text">
      <string>Space</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">m_delimiterCheckGroup</string>
+    </attribute>
    </widget>
-   <widget class="QCheckBox" name="tabCheck">
+   <widget class="QCheckBox" name="m_tabCheck">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -160,21 +136,11 @@
     <property name="text">
      <string>Tab</string>
     </property>
+    <attribute name="buttonGroup">
+     <string notr="true">m_delimiterCheckGroup</string>
+    </attribute>
    </widget>
-   <widget class="QCheckBox" name="otherCheck">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Other</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="otherEdit">
+   <widget class="QLineEdit" name="m_otherEdit">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -183,12 +149,273 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="text">
+     <string>,</string>
+    </property>
    </widget>
+   <widget class="QCheckBox" name="m_otherCheck">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Other</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">m_delimiterCheckGroup</string>
+    </attribute>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>211</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>position setting</string>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>head row</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_headrowEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>20</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>data start row</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_dataStartRowEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>50</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>20</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>X colmun</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_XColumnEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>80</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>20</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_YStartColumnEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>140</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>20</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>140</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Y start colmun</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_stepEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>170</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>170</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Y colmun step</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="m_headStartColumnEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>110</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>20</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>head start column</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="m_selectButton">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>390</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="m_saveButton">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>390</y>
+     <width>61</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="m_quitButton">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>390</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Quit</string>
+   </property>
   </widget>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="m_checkButtonGroup"/>
+  <buttongroup name="m_delimiterCheckGroup"/>
+  <buttongroup name="m_spanCheckGroup"/>
  </buttongroups>
 </ui>

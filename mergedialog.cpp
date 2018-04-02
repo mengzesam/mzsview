@@ -1,18 +1,11 @@
 #include "mergedialog.h"
 #include <QDebug>
 
-const int MergeDialog::m_max_filenum=50;
+const int MergeDialog::M_MAX_FILENUM=50;
 
 MergeDialog::MergeDialog(QWidget *parent):
     QDialog(parent),
     m_model(1,1),
-    m_head_row(0),
-    m_data_start_row(2),
-    m_x_column(0),
-    m_y_start_column(1),
-    m_y_index_infield(0),
-    m_head_index_infield(0),
-    m_field_length(1),
     m_selected(false)
 {
     m_ui.setupUi(this);
@@ -43,7 +36,7 @@ void MergeDialog::onMerging()
         QString savefile=QFileDialog::getSaveFileName(this,tr("Open data file"), "D:\\",
                                                       tr("Data Files (*.csv);;All Files (*.*)"));
         if(savefile.trimmed()!=""){
-            int button_id=m_ui.m_checkButtonGroup->checkedId();//defultly,1st ID is -2,2nd is -3...
+            int button_id=m_ui.m_spanCheckGroup->checkedId();//defultly,1st ID is -2,2nd is -3...;
             if(-2==button_id){//column span
                 columnMerging(savefile);
             }else if(-3==button_id){//row span
@@ -58,17 +51,16 @@ void MergeDialog::onMerging()
 void MergeDialog::columnMerging(QString savefile)
 {
     if(m_selected && savefile!=""){
-        QString delimiter=",";
         QFile fs_save(savefile);
         if (!fs_save.open(QIODevice::WriteOnly | QIODevice::Text)) {
              QMessageBox::warning(this,"warning",QString("cannot create file:%1").arg(savefile));
              return;
          }
         QTextStream out(&fs_save);
-        QFile fs_selects[m_max_filenum];
-        QTextStream* stream_selects[m_max_filenum];
+        QFile fs_selects[M_MAX_FILENUM];
+        QTextStream* stream_selects[M_MAX_FILENUM];
         int filenum=0;
-        for(int i=0;i<m_model.rowCount() && filenum<m_max_filenum;i++){
+        for(int i=0;i<m_model.rowCount() && filenum<M_MAX_FILENUM;i++){
             QString selectfile=m_model.data(m_model.index(i,0,QModelIndex())).toString();
             fs_selects[filenum].setFileName(selectfile);
             if(!fs_selects[filenum].open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -85,9 +77,28 @@ void MergeDialog::columnMerging(QString savefile)
         QString out_line="";
         QString in_line;
         QStringList values;
+        int head_row=m_ui.m_headrowEdit->text().toInt()-1;
+        int data_startrow=m_ui.m_dataStartRowEdit->text().toInt()-1;
+        int x_column=m_ui.m_XColumnEdit->text().toInt()-1;
+        int head_startcolumn=m_ui.m_headStartColumnEdit->text().toInt()-1;
+        int ycolumn_step=m_ui.m_stepEdit->text().toInt();
+        int ystart_column=m_ui.m_YStartColumnEdit->text().toInt()-1;
+        int delimiter_check=m_ui.m_delimiterCheckGroup->checkedId();
+        QString delimiter=",";
+        if(delimiter_check==-3)
+            delimiter=";";
+        else if(delimiter_check==-4)
+            delimiter=" ";
+        else if(delimiter_check==-5)
+            delimiter="\t";
+        else if(delimiter_check==-6){
+            if(m_ui.m_otherEdit->text().size()>=1)
+                delimiter=m_ui.m_otherEdit->text();
+        }
         int row_pos=0;
+        int ycount_list[M_MAX_FILENUM];
         for(int i=0;i<filenum;i++){
-            for(;row_pos<m_head_row;row_pos++){
+            for(;row_pos<head_row;row_pos++){
                 if(!stream_selects[i]->atEnd()){
                     stream_selects[i]->readLine();
                 }
@@ -96,11 +107,13 @@ void MergeDialog::columnMerging(QString savefile)
                 continue;
             in_line=stream_selects[i]->readLine();
             values = QString(in_line).split(delimiter,QString::KeepEmptyParts);
-            if(m_x_column<values.size()){
-                out_line.append(values.at(m_x_column)+",");
+            if(x_column<values.size()){
+                out_line.append(values.at(x_column)+delimiter);
             }
-            for(int j=m_y_start_column+m_head_index_infield;j<values.size();j+=m_field_length){
-                out_line.append(values.at(j)+",");
+            ycount_list[i]=1;
+            for(int j=head_startcolumn;j<values.size();j+=ycolumn_step){
+                out_line.append(values.at(j)+delimiter);
+                ++ycount_list[i];
             }
         }
         row_pos++;
@@ -108,31 +121,36 @@ void MergeDialog::columnMerging(QString savefile)
             out_line.chop(delimiter.size());
         }
         out<<out_line<<"\n";
-        for(;row_pos<m_data_start_row;row_pos++){
+        for(;row_pos<data_startrow;row_pos++){
             for(int i=0;i<filenum;i++){
                 if(!stream_selects[i]->atEnd())
                    in_line=stream_selects[i]->readLine();
             }
         }
-        int end_nums=0;
-        while(true){
+        bool flag=true;
+        while(flag){
             out_line="";
             for(int i=0;i<filenum;i++){
+                int num=0;
                 if(stream_selects[i]->atEnd()){
-                    end_nums++;
-                    continue;
-                 }
-                in_line=stream_selects[i]->readLine();
-                values = QString(in_line).split(delimiter,QString::KeepEmptyParts);
-                if(m_x_column<values.size()){
-                    out_line.append(values.at(m_x_column)+",");
+                    flag=false;
+                }else{
+                    flag=true;
+                    in_line=stream_selects[i]->readLine();
+                    values = QString(in_line).split(delimiter,QString::KeepEmptyParts);
+                    if(x_column<values.size()){
+                        out_line.append(values.at(x_column)+delimiter);
+                        ++num;
+                    }
+                    for(int j=ystart_column;j<values.size();j+=ycolumn_step){
+                        out_line.append(values.at(j)+delimiter);
+                        ++num;
+                    }
                 }
-                for(int j=m_y_start_column+m_y_index_infield;j<values.size();j+=m_field_length){
-                    out_line.append(values.at(j)+",");
+                if(num<ycount_list[i]){
+                    out_line.append(delimiter.repeated(ycount_list[i]-num));
                 }
             }
-            if(end_nums==filenum)
-                break;
             if(out_line.size()>=delimiter.size()){
                 out_line.chop(delimiter.size());
             }
