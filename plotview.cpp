@@ -189,10 +189,8 @@ int PlotView::setLineData(int line_No, int field_index)
     return 0;
 }
 
-int PlotView::loadChart()
+void PlotView::setCursor(int flag)//flag 0:called by loadChart,1:called by nextTime,2:called by prevTime
 {
-    if(setAllLineData()!=0)
-        return -1;
     LineType* p_line=NULL;
     for(int i=0;i<m_chart->series().size()-2;i++){
         p_line=(LineType*)m_chart->series().at(i);
@@ -204,100 +202,78 @@ int PlotView::loadChart()
     if(p_line!=NULL && p_line->count()>1){
         x_left=p_line->at(0).x();
         x_right=p_line->at(p_line->count()-1).x();
+    }else{
+        return;
     }
-    m_current_lefttime=x_left;
+    if(flag==0){
+        m_current_lefttime=x_left;
+    }else if(flag==1){
+        if(m_current_lefttime+m_time_span>x_right){
+            return;
+        }
+        m_current_lefttime=m_current_lefttime+m_time_span;
+        x_left=m_current_lefttime;
+        x_right=m_current_lefttime+m_time_span;
+    }else if(flag==2){
+        if(m_current_lefttime-m_time_span<x_left){
+            return;
+        }
+        m_current_lefttime=m_current_lefttime-m_time_span;
+    }else{
+        return;
+    }
+    x_left=m_current_lefttime;
     x_right=m_current_lefttime+m_time_span;
+    m_cursor_left->clear();
+    m_cursor_right->clear();
     m_cursor_left->append(x_left,m_minY);
     m_cursor_left->append(x_left,m_maxY);
     m_cursor_right->append(x_right,m_minY);
     m_cursor_right->append(x_right,m_maxY);
-    m_chart->axisX()->setMin(QDateTime::fromMSecsSinceEpoch(m_current_lefttime));
-    m_chart->axisX()->setMax(QDateTime::fromMSecsSinceEpoch(m_current_lefttime+m_time_span));
+    m_chart->axisX()->setMin(QDateTime::fromMSecsSinceEpoch(x_left));
+    m_chart->axisX()->setMax(QDateTime::fromMSecsSinceEpoch(x_right));
     QString stime0=QDateTime::fromMSecsSinceEpoch(x_left).toString(mzsview::CURSOR_FORMAT);
     QString stime1=QDateTime::fromMSecsSinceEpoch(x_right).toString(mzsview::CURSOR_FORMAT);
     m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
-    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));    
+    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));
     m_cursor_picked=NULL;
-    m_isloadchart=true;
+    if(flag==0){
+        m_isloadchart=true;
+    }
     emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,x_left);
     emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,x_right);
+}
+
+int PlotView::loadChart()
+{
+    if(setAllLineData()!=0)
+        return -1;
+    setCursor(0);
+    m_isloadchart=true;
     return 0;
+}
+
+void PlotView::setTimespan()
+{
+    bool ok;
+    double time_span=QInputDialog::getDouble(this,tr("Input Time Span"),tr("Hours:"),2,1,24,1, &ok);
+    if(ok){
+        m_time_span=time_span*3600000;
+    }
 }
 
 void PlotView::nextTime()
 {
     if(!m_isloadchart)
         return;
-    LineType* p_line=NULL;
-    for(int i=0;i<m_chart->series().size()-2;i++){
-        p_line=(LineType*)m_chart->series().at(i);
-        if(p_line->count()>1)
-            break;
-    }
-    double x_left=0.0;
-    double x_right=0.0;
-    if(p_line!=NULL && p_line->count()>1){
-        x_right=p_line->at(p_line->count()-1).x();
-    }
-    if(m_current_lefttime+m_time_span>x_right){
-        return;
-    }
-    m_current_lefttime=m_current_lefttime+m_time_span;
-    x_left=m_current_lefttime;
-    x_right=m_current_lefttime+m_time_span;
-    m_cursor_left->clear();
-    m_cursor_right->clear();
-    m_cursor_left->append(x_left,m_minY);
-    m_cursor_left->append(x_left,m_maxY);
-    m_cursor_right->append(x_right,m_minY);
-    m_cursor_right->append(x_right,m_maxY);
-    m_chart->axisX()->setMin(QDateTime::fromMSecsSinceEpoch(x_left));
-    m_chart->axisX()->setMax(QDateTime::fromMSecsSinceEpoch(x_right));
-    QString stime0=QDateTime::fromMSecsSinceEpoch(x_left).toString(mzsview::CURSOR_FORMAT);
-    QString stime1=QDateTime::fromMSecsSinceEpoch(x_right).toString(mzsview::CURSOR_FORMAT);
-    m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
-    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));
-    m_cursor_picked=NULL;
-    emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,x_left);
-    emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,x_right);
+    setCursor(1);
 }
 
 void PlotView::prevTime()
 {
     if(!m_isloadchart)
         return;
-    LineType* p_line=NULL;
-    for(int i=0;i<m_chart->series().size()-2;i++){
-        p_line=(LineType*)m_chart->series().at(i);
-        if(p_line->count()>1)
-            break;
-    }
-    double x_left=0.0;
-    double x_right=0.0;
-    if(p_line!=NULL && p_line->count()>1){
-        x_left=p_line->at(0).x();
-    }
-    if(m_current_lefttime-m_time_span<x_left){
-        return;
-    }
-    m_current_lefttime=m_current_lefttime-m_time_span;
-    x_left=m_current_lefttime;
-    x_right=m_current_lefttime+m_time_span;
-    m_cursor_left->clear();
-    m_cursor_right->clear();
-    m_cursor_left->append(x_left,m_minY);
-    m_cursor_left->append(x_left,m_maxY);
-    m_cursor_right->append(x_right,m_minY);
-    m_cursor_right->append(x_right,m_maxY);
-    m_chart->axisX()->setMin(QDateTime::fromMSecsSinceEpoch(x_left));
-    m_chart->axisX()->setMax(QDateTime::fromMSecsSinceEpoch(x_right));
-    QString stime0=QDateTime::fromMSecsSinceEpoch(x_left).toString(mzsview::CURSOR_FORMAT);
-    QString stime1=QDateTime::fromMSecsSinceEpoch(x_right).toString(mzsview::CURSOR_FORMAT);
-    m_status->setPos(m_chart->size().width()*0.1, m_chart->size().height()*0.92);
-    m_status->setText(QString("cursor1 %1   cursor2 %2").arg(stime0).arg(stime1));
-    m_cursor_picked=NULL;
-    emitCursorChangedSignal(mzsview::CURSOR1_COLUMN,x_left);
-    emitCursorChangedSignal(mzsview::CURSOR2_COLUMN,x_right);
+    setCursor(2);
 }
 
 int PlotView::findYbyX(LineType *series,int series_index,double x,double& y)//series point.x must be sorted by ascend

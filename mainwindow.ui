@@ -61,6 +61,7 @@
     <property name="title">
      <string>Move</string>
     </property>
+    <addaction name="actionTimespan"/>
     <addaction name="actionNext"/>
     <addaction name="actionPrev"/>
    </widget>
@@ -100,6 +101,11 @@
   <action name="actionPrev">
    <property name="text">
     <string>Prev</string>
+   </property>
+  </action>
+  <action name="actionTimespan">
+   <property name="text">
+    <string>Timespan</string>
    </property>
   </action>
  </widget>

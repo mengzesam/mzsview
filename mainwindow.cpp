@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui.actionEx_it,&QAction::triggered,this,&MainWindow::close);
     connect(m_ui.actionNext,&QAction::triggered,m_ui.plotview,&PlotView::nextTime);
     connect(m_ui.actionPrev,&QAction::triggered,m_ui.plotview,&PlotView::prevTime);
+    connect(m_ui.actionTimespan,&QAction::triggered,m_ui.plotview,&PlotView::setTimespan);
     connect(m_ui.action_Merge_Files ,&QAction::triggered,this,&MainWindow::mergeFiles);
     connect(m_ui.plotview,&PlotView::cursorValueChanged,this,&MainWindow::getCursorValue);
     connect(m_ui.plotview,&PlotView::tagValueChanged,this,&MainWindow::setTagValue);

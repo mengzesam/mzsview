@@ -14,7 +14,7 @@ namespace mzsview {
     const static char* DEFAULT_COLORS[COLUMNS]={"#ff0000","#0000ff","#00ff00","#000000",
                                                 "#ff00ff","#aa00ff","#555500","#ffff00"};
     const static double DEFAULT_MINS[ROWS]={0,0,0,0,0,0,0,0};
-    const static double DEFAULT_MAXS[ROWS]={12000,10000,2000,30,200,300,30,500};
+    const static double DEFAULT_MAXS[ROWS]={600,600,600,600,30,30,30,30};
     const static int DEFAULT_PHASE_STATE=0;//Qt::Unchecked
     const static int DEFAULT_SELECT_STATE=2;//Qt::Checked
     const static int TAG_COLUMN=0;

@@ -9,6 +9,7 @@
 #include <QDateTimeAxis>
 #include <QValueAxis>
 #include <QStandardItemModel>
+#include <QInputDialog>
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE
@@ -47,6 +48,7 @@ public slots:
                            int select_state,int phase_state,const QString &color,double min,double max);
     void nextTime();
     void prevTime();
+    void setTimespan();
 
 signals:
     void cursorValueChanged(int cursorColumn,QList<double> cursorValue);
@@ -55,6 +57,7 @@ signals:
 private:
     void initChart();
     void emptyChart();
+    void setCursor(int flag=0);
     int setAllLineData();
     int setLineData(int line_No,int field_index);
     int findYbyX(QLineSeries * series,int series_index,double x,double& y);
