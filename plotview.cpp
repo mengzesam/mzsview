@@ -189,7 +189,8 @@ int PlotView::setLineData(int line_No, int field_index)
     return 0;
 }
 
-void PlotView::setCursor(int flag)//flag 0:called by loadChart,1:called by nextTime,2:called by prevTime
+void PlotView::setCursor(int flag)//flag 0:called by loadChart,1:called by nextTime,
+                                   //2:called by prevTime,3:called by by setTimespan
 {
     LineType* p_line=NULL;
     for(int i=0;i<m_chart->series().size()-2;i++){
@@ -219,7 +220,7 @@ void PlotView::setCursor(int flag)//flag 0:called by loadChart,1:called by nextT
             return;
         }
         m_current_lefttime=m_current_lefttime-m_time_span;
-    }else{
+    }else if(flag!=3){
         return;
     }
     x_left=m_current_lefttime;
@@ -259,6 +260,8 @@ void PlotView::setTimespan()
     double time_span=QInputDialog::getDouble(this,tr("Input Time Span"),tr("Hours:"),2,1,24,1, &ok);
     if(ok){
         m_time_span=time_span*3600000;
+        setCursor(3);
+
     }
 }
 
