@@ -45,6 +45,9 @@ public slots:
     void pickLine();
     void modelDataChanged(const int row_index,const QString &tag,int tag_field_index,
                            int select_state,int phase_state,const QString &color,double min,double max);
+    void nextTime();
+    void prevTime();
+
 signals:
     void cursorValueChanged(int cursorColumn,QList<double> cursorValue);
     void tagValueChanged(int rowIndex,const QString& tag);
@@ -75,6 +78,8 @@ private:
     bool m_filevalid;
     double m_values_min[mzsview::ROWS];
     double m_values_max[mzsview::ROWS];
+    qint64 m_current_lefttime;
+    qint64 m_time_span;
 
 private://class static member
 };

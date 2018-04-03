@@ -57,8 +57,16 @@
     </property>
     <addaction name="action_Merge_Files"/>
    </widget>
+   <widget class="QMenu" name="menuMove">
+    <property name="title">
+     <string>Move</string>
+    </property>
+    <addaction name="actionNext"/>
+    <addaction name="actionPrev"/>
+   </widget>
    <addaction name="menuF_ile"/>
    <addaction name="menu_Tools"/>
+   <addaction name="menuMove"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -82,6 +90,16 @@
   <action name="action_Merge_Files">
    <property name="text">
     <string>&amp;Merge Files</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="text">
+    <string>Next</string>
+   </property>
+  </action>
+  <action name="actionPrev">
+   <property name="text">
+    <string>Prev</string>
    </property>
   </action>
  </widget>
