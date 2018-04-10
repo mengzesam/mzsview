@@ -32,6 +32,9 @@ public:
     int updateView();
     int getTags();
 
+public slots:
+    void setTagFieldIndex(int fieldindex_list[],int &n);
+
 private slots:
     void getCursorValue(int cursorColumn,QList<double> y_list);
     void setTagValue(int rowIndex,const QString& tag);
@@ -58,6 +61,5 @@ private:
 private://const static member
 
 };
-
 
 #endif // MAINWINDOW_H

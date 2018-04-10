@@ -53,13 +53,14 @@ public slots:
 signals:
     void cursorValueChanged(int cursorColumn,QList<double> cursorValue);
     void tagValueChanged(int rowIndex,const QString& tag);
+    void getTagFieldIndex(int fieldindex_list[],int &n);
 
 private:
     void initChart();
     void emptyChart();
     void setCursor(int flag=0);
-    int setAllLineData();
-    int setLineData(int line_No,int field_index);
+    int setLineData(int flag,int line_No=0, int field_index=0);
+    int setLineData2(int line_No,int field_index);
     int findYbyX(QLineSeries * series,int series_index,double x,double& y);
     void emitCursorChangedSignal(int cursorColumn,double cursorX);
     void emitTagChangedSignal(int rowIndex,const QString& tag);
@@ -83,6 +84,10 @@ private:
     double m_values_max[mzsview::ROWS];
     qint64 m_current_lefttime;
     qint64 m_time_span;
+    qint64 m_leftpoint_index;
+    qint64 m_rightpoint_index;
+    qint64 m_starttime;
+    qint64 m_endtime;
 
 private://class static member
 };

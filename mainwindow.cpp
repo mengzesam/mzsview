@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QDebug>
+#include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui.plotview,&PlotView::tagValueChanged,this,&MainWindow::setTagValue);
     connect(m_model,&QStandardItemModel::dataChanged,this,&MainWindow::modelDataChanged);
     connect(this,&MainWindow::dataChangedSignal,m_ui.plotview,&PlotView::modelDataChanged);
+    connect(m_ui.plotview,&PlotView::getTagFieldIndex,this,&MainWindow::setTagFieldIndex);
 }
 
 void MainWindow::initModel()
@@ -186,8 +188,6 @@ void MainWindow::modelDataChanged(const QModelIndex &topLeft)
        max=index.data().toDouble();
        emit dataChangedSignal(row_index,tag,tag_field_index,select_state,phase_state,
                               color,min,max);
-//       qDebug()<<tag<<tag_field_index<<":"<<select_state<<":"<<phase_state<<":"<<color
-//              <<":"<<min<<":"<<max;
     }
 }
 
@@ -210,3 +210,12 @@ void MainWindow::mergeFiles()
     mergedialog.exec();
 }
 
+void MainWindow::setTagFieldIndex(int fieldindex_list[], int &n)
+{
+    n=n<m_tags_hash.size()?n:m_tags_hash.size();
+    for(int i=0;i<n;i++){
+        QModelIndex index=m_model->index(i,mzsview::TAG_COLUMN,QModelIndex());
+        QString tag=index.data().toString();
+        fieldindex_list[i]=m_tags_hash[tag];
+    }
+}

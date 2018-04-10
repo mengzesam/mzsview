@@ -123,7 +123,7 @@ int PlotView::setLineData(int flag,int line_No, int field_index)//flag 0:called 
         line = (stream.readLine()).trimmed();
         if(line.isEmpty())
             continue;
-        values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+        values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
         if(values.size()<2)
             continue;
         if(read_flag==-1){
@@ -158,7 +158,7 @@ int PlotView::setLineData(int flag,int line_No, int field_index)//flag 0:called 
         line = (stream.readLine()).trimmed();
         if(line.isEmpty())
             continue;
-        values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+        values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
         if(values.size()<2)
             continue;
         momentInTime=QDateTime::fromString(values[0],mzsview::DATETIME_FORMAT);
@@ -175,13 +175,20 @@ int PlotView::setLineData(int flag,int line_No, int field_index)//flag 0:called 
     }
     if(flag!=4){
         emptyChart();//empty data for every line series
-        for(int i=0;i<m_valid_lines;i++){
-            m_chart->series().at(i)->setName(heads.at(i+1));
-            emitTagChangedSignal(i,heads.at(i+1));
+        int fieldindex_list[mzsview::ROWS];
+        int tag_size=mzsview::ROWS;
+        if(flag==0){
+            for(int i=0;i<m_valid_lines;i++){
+                m_chart->series().at(i)->setName(heads.at(i+1));
+                fieldindex_list[i]=i+1;
+                emitTagChangedSignal(i,heads.at(i+1));
+            }
+        }else{
+            emit getTagFieldIndex(fieldindex_list,tag_size);
         }
         while(!stream.atEnd() && current_x<=m_endtime){
-            for(int i=0;i<values.size()-1 && i<mzsview::ROWS;i++){
-                double y=values[i+1].toDouble();
+            for(int i=0;i<values.size()-1 && i<mzsview::ROWS && i<tag_size;i++){
+                double y=values[fieldindex_list[i]].toDouble();
                 if(abs(m_values_max[i]-m_values_min[i])>mzsview::ERR){
                     y=(y-m_values_min[i])/(m_values_max[i]-m_values_min[i])*100.0;
                 }
@@ -190,7 +197,7 @@ int PlotView::setLineData(int flag,int line_No, int field_index)//flag 0:called 
             line = (stream.readLine()).trimmed();
             if(line.isEmpty())
                 continue;
-            values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+            values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
             if(values.size()<2)
                 continue;
             momentInTime=QDateTime::fromString(values[0],mzsview::DATETIME_FORMAT);
@@ -222,7 +229,7 @@ int PlotView::setLineData(int flag,int line_No, int field_index)//flag 0:called 
             line = (stream.readLine()).trimmed();
             if(line.isEmpty())
                 continue;
-            values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+            values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
             if(values.size()<2 || values.size()<=field_index)
                 continue;
             momentInTime=QDateTime::fromString(values[0],mzsview::DATETIME_FORMAT);
@@ -255,7 +262,7 @@ int PlotView::setLineData2(int line_No, int field_index)
         datafile.close();
         return -1;
     }
-    values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+    values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
     if(values.size()<2 ||values.size()<=field_index){
         datafile.close();
         return -1;
@@ -266,7 +273,7 @@ int PlotView::setLineData2(int line_No, int field_index)
     while (!stream.atEnd()) {
         line = (stream.readLine()).trimmed();
         if(line.isEmpty()) continue;
-        values = line.split(mzsview::DATA_DELIMITER, QString::SkipEmptyParts);
+        values = line.split(mzsview::DATA_DELIMITER, QString::KeepEmptyParts);
         if(values.size()<2 ||values.size()<=field_index) continue;
         momentInTime=QDateTime::fromString(values[0],mzsview::DATETIME_FORMAT);
         if(!momentInTime.isValid()) continue;
