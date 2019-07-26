@@ -10,6 +10,7 @@ from Ui_MergeDialog import Ui_MergeDialog
 class MergeDialog(QDialog):
     MAX_FILENUM=50
     MAX_READLINE=10000
+    REPEAT_SUFFIX="_suffix_#$:@%|&*(!@#$:@%|" #设置为现实中很难出现的字符串
     
     def __init__(self,parent=None):
         super(QDialog,self).__init__(parent)
@@ -51,7 +52,7 @@ class MergeDialog(QDialog):
         self.ui.m_destEncodingCBBox.setCurrentIndex(0)
         self.ui.m_datetimeFormatCBBox.addItems([key for key in self.datetime_formats])
         self.ui.m_datetimeFormatCBBox.setCurrentIndex(0)
-
+        self.ui.m_offsetDataHeadEdit.setToolTip(u"数据相对字头的列偏移量，1为右偏1，-1为左偏1")
 
     def setupConnect(self):
         self.ui.m_selectButton.clicked.connect(self.onSelectSrcFiles)
@@ -69,7 +70,6 @@ class MergeDialog(QDialog):
                 ,self.ui.m_offsetDataHeadEdit.setEnabled(not state)
             )
         )
-
 
     def onSelectSrcFiles(self):
         (file_list,_)=QFileDialog.getOpenFileNames(self,
@@ -95,23 +95,26 @@ class MergeDialog(QDialog):
             )
             if(save_file!=""):
                 if(self.ui.m_colmunSpanCheck.isChecked()):#column span
-                    self.columnMerging(save_file)
+                    try:
+                        self.mergingByColumn(save_file)
+                    except Exception as e:
+                        QMessageBox.warning(self,"Error!",format(e))
                 elif(self.ui.m_rowSpanCheck.isChecked()):
-                    self.rowMerging(save_file)
+                    self.mergingByRow(save_file)
             else:
                 QMessageBox.warning(self,"Warning!","please select merging file!")
         else:
             QMessageBox.warning(self,"Warning","source files have not been selected")
 
-    def columnMerging(self,save_file):
+    def mergingByColumn(self,save_file):
         head_row=self.ui.m_headrowEdit.value()-1
         data_startrow=self.ui.m_dataStartRowEdit.value()-1
         x_column=self.ui.m_XColumnEdit.value()-1
         ycolumn_step=self.ui.m_stepEdit.value()
         ystart_column=self.ui.m_YStartColumnEdit.value()-1
         offset_data_head=self.ui.m_offsetDataHeadEdit.value() #数据相对字头的列偏移量，1为右偏1，-1为左偏1
-        src_coding=self.ui.m_srcEncodingCBBox.currentText()
-        dest_coding=self.ui.m_destEncodingCBBox.currentText()
+        src_encoding=self.ui.m_srcEncodingCBBox.currentText()
+        dest_encoding=self.ui.m_destEncodingCBBox.currentText()
         delimiter=","
         if(self.ui.m_semiCheck.isChecked()):
             delimiter=";"
@@ -124,11 +127,12 @@ class MergeDialog(QDialog):
             if(len(ss)>=1):
                 delimiter=ss
         files_nume=self.m_model.rowCount()
+        total_data=pandas.DataFrame()
         for i in range(files_nume):
             filename=self.m_model.data(self.m_model.index(i,0,QModelIndex()))
             mycolumns=pandas.read_csv(filename,
                 sep=delimiter,
-                encoding=src_coding,
+                encoding=src_encoding,
                 skipinitialspace=True,
                 skip_blank_lines=True,
                 skiprows=head_row,
@@ -142,7 +146,7 @@ class MergeDialog(QDialog):
                 myindex_col=x_column 
             data=pandas.read_csv(filename,
                 sep=delimiter,
-                encoding=src_coding,
+                encoding=src_encoding,
                 skipinitialspace=True,
                 skip_blank_lines=True,
                 skiprows=data_startrow,
@@ -151,18 +155,35 @@ class MergeDialog(QDialog):
                 usecols=use_cols,
                 nrows=self.MAX_READLINE
             )
-            data.index.name="time"
-            if(self.ui.m_XasIndexCheck.isChecked()):
-                use_cols=use_cols[1:]
-            data.columns=mycolumns[use_cols]
+            if(len(use_cols)>1):#不大于1列不执行
+                j=use_cols[0]
+                use_cols=use_cols[1:] 
+                if(offset_data_head!=0    #以下：只有加上偏移后索引不超出范围才有限
+                    and offset_data_head+use_cols[0]>=0 
+                    and offset_data_head+use_cols[-1]<len(mycolumns)
+                ):
+                    use_cols=[i+offset_data_head for i in use_cols]                
+                if(not self.ui.m_XasIndexCheck.isChecked()):
+                    use_cols.insert(0,j) 
+                data.columns=mycolumns[use_cols]
+            data.index.name="index"
             if(self.ui.m_XisDateTimeCheck.isChecked()):
+                if(self.ui.m_XasIndexCheck.isChecked()):
+                    data.index.name="time"
                 mydatetime_format=self.datetime_formats[
                     self.ui.m_datetimeFormatCBBox.currentText()
                 ]
                 data.index=pandas.to_datetime(data.index,format=mydatetime_format)
-            print(data)
+            if(i==0):
+                total_data=data
+            else:
+                total_data=total_data.join(data,lsuffix=self.REPEAT_SUFFIX,rsuffix=self.REPEAT_SUFFIX)
+        mycolumns=[s.replace(self.REPEAT_SUFFIX,"") for s in total_data.columns]
+        total_data.columns=mycolumns
+        total_data.to_csv(path_or_buf=save_file,sep=delimiter,encoding=dest_encoding)
+        #print(total_data)
 
-    def rowMerging(self,save_file):
+    def mergingByRow(self,save_file):
         QMessageBox.warning(self,"Warning!",save_file)        
 
 
