@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#如使用PySide2,import时将PyQt5替换成PySide2
 import sys
 import pandas
 from PyQt5.QtCore import Qt,QCoreApplication,QModelIndex
@@ -13,7 +13,7 @@ class MergeDialog(QDialog):
     REPEAT_SUFFIX="_suffix_#$:@%|&*(!@#$:@%|" #设置为现实中很难出现的字符串
     
     def __init__(self,parent=None):
-        super(QDialog,self).__init__(parent)
+        super(MergeDialog,self).__init__(parent)
         self.datetime_formats={
             'yyyy/mm/dd hh:mm:ss':'%Y/%m/%d %H:%M:%S',
             'yyyy/mm/dd h:m:s':'%Y/%m/%d %H:%M:%S',
@@ -143,7 +143,7 @@ class MergeDialog(QDialog):
             use_cols.insert(0,x_column)
             myindex_col=None
             if(self.ui.m_XasIndexCheck.isChecked()):
-                myindex_col=x_column 
+                myindex_col=0 
             data=pandas.read_csv(filename,
                 sep=delimiter,
                 encoding=src_encoding,
@@ -159,10 +159,10 @@ class MergeDialog(QDialog):
                 j=use_cols[0]
                 use_cols=use_cols[1:] 
                 if(offset_data_head!=0    #以下：只有加上偏移后索引不超出范围才有限
-                    and offset_data_head+use_cols[0]>=0 
-                    and offset_data_head+use_cols[-1]<len(mycolumns)
+                    and use_cols[0]-offset_data_head>=0 
+                    and use_cols[-1]-offset_data_head<len(mycolumns)
                 ):
-                    use_cols=[i+offset_data_head for i in use_cols]                
+                    use_cols=[i-offset_data_head for i in use_cols]                
                 if(not self.ui.m_XasIndexCheck.isChecked()):
                     use_cols.insert(0,j) 
                 data.columns=mycolumns[use_cols]
@@ -189,6 +189,7 @@ class MergeDialog(QDialog):
 
 if __name__=='__main__':
     QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling) #>=Qt5.6:Enables high-DPI scaling in Qt on supported platforms (see also High DPI Displays
+    #QApplication.setStyle("fusion")
     app=QApplication(sys.argv)
     w=MergeDialog()
     w.show()
