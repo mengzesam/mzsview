@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DataSettingDialog</class>
+ <widget class="QDialog" name="DataSettingDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>677</width>
+    <height>371</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Setting</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="DataSetting">
+        <attribute name="title">
+         <string>Tab 1</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>652</width>
+           <height>311</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,9">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,3,1,10">
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>数据来源</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="title">
+               <string/>
+              </property>
+              <widget class="QRadioButton" name="RadioFromFile">
+               <property name="geometry">
+                <rect>
+                 <x>50</x>
+                 <y>0</y>
+                 <width>51</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>来自文件</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QRadioButton" name="RadioUserDefine">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>41</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>自定义</string>
+               </property>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="BTNFromFile">
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>选择文件</string>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="EditFileName">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>E:\mydoucument\data.csv</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="4,5,4,5,4,8,3,1,3,3,3,20">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>字头开始行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="SpinHeadStart">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>数据开始行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="SpinDataStart">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>最大读取行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="SpinMaxRow">
+              <property name="maximum">
+               <number>3000000</number>
+              </property>
+              <property name="singleStep">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>3000000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>分隔符</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxDelimiter">
+              <item>
+               <property name="text">
+                <string>,</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>tab</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>space</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>encoding</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxEncoding">
+              <item>
+               <property name="text">
+                <string>gb2312</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>utf_16</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>latin_1</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>cp65001</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>ascii</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>utf_8</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>gb18030</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>gbk</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>big5</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>big5hkscs</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>时间格式</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxTimeFormat">
+              <item>
+               <property name="text">
+                <string>yyyy/mm/dd hh:mm:ss</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy/mm/dd h:m:s</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy/mm/dd hh:mm</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy/mm/dd h:m</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy/mm/dd hh:mm:ss</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy/mm/dd h:m:s</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy/mm/dd hh:mm</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy/mm/dd h:m</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy-mm-dd hh:mm:ss</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy-mm-dd h:m:s</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy-mm-dd hh:mm</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yyyy-mm-dd h:m</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy-mm-dd hh:mm:ss</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy-mm-dd h:m:s</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy-mm-dd hh:mm</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yy-mm-dd h:m</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="6,12,3,6,4,6,1,6">
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>X轴取自文件哪列？</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxXCol"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>X轴类型</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxXType">
+              <item>
+               <property name="text">
+                <string>实数</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>日期</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>时间</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>日期时间</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>散点</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>X轴范围,从</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="EditXmin"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>到</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="EditXmax"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="6,3,1,20,1,3,6">
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Y轴取自文件哪几列？</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="BTNSelectYs">
+              <property name="text">
+               <string>选择</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>第</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxYCols"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>列</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Y轴类型</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="CBoxYType">
+              <item>
+               <property name="text">
+                <string>实数</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>振幅@相角</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>振奋∠相角</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QTableWidget" name="tableWidget">
+              <row>
+               <property name="text">
+                <string>1</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>2</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>3</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>4</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>5</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>6</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>7</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>8</string>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>系列名</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>f(x)</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>下限</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>上限</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>可见</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>颜色</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>线宽</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>线形</string>
+               </property>
+              </column>
+              <item row="0" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="0" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="0" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="0" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="0" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="0" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="0" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="0" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="1" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="1" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="1" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="1" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="1" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="1" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="1" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="1" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="2" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="2" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="2" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="2" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="2" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="2" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="2" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="2" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="3" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="3" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="3" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="3" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="3" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="3" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="3" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="3" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="4" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="4" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="4" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="4" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="4" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="4" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="4" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="4" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="5" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="5" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="5" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="5" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="5" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="5" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="5" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="5" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="6" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="6" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="6" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="6" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="6" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="6" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="6" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="6" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="7" column="0">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="7" column="1">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="7" column="2">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="7" column="3">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item row="7" column="4">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checkState">
+                <enum>Checked</enum>
+               </property>
+              </item>
+              <item row="7" column="5">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item row="7" column="6">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="7" column="7">
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="FigureSetting">
+        <attribute name="title">
+         <string>Tab 2</string>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DataSettingDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DataSettingDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

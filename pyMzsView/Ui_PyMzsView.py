@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'pyMzsView.ui'
+#
+# Created by: PyQt5 UI code generator 5.11.3
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(614, 437)
+        self.centralWidget = QtWidgets.QWidget(MainWindow)
+        self.centralWidget.setObjectName("centralWidget")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.centralWidget)
+        self.verticalLayout_3.setContentsMargins(11, 11, 11, 11)
+        self.verticalLayout_3.setSpacing(6)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setSpacing(6)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_3.addLayout(self.verticalLayout)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setSpacing(6)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.infoTable = QtWidgets.QTableWidget(self.centralWidget)
+        self.infoTable.setObjectName("infoTable")
+        self.infoTable.setColumnCount(0)
+        self.infoTable.setRowCount(0)
+        self.verticalLayout_2.addWidget(self.infoTable)
+        self.verticalLayout_3.addLayout(self.verticalLayout_2)
+        MainWindow.setCentralWidget(self.centralWidget)
+        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 614, 18))
+        self.menuBar.setObjectName("menuBar")
+        self.menuF_ile = QtWidgets.QMenu(self.menuBar)
+        self.menuF_ile.setObjectName("menuF_ile")
+        self.menu_Tools = QtWidgets.QMenu(self.menuBar)
+        self.menu_Tools.setObjectName("menu_Tools")
+        self.menuMove = QtWidgets.QMenu(self.menuBar)
+        self.menuMove.setObjectName("menuMove")
+        MainWindow.setMenuBar(self.menuBar)
+        self.mainToolBar = QtWidgets.QToolBar(MainWindow)
+        self.mainToolBar.setObjectName("mainToolBar")
+        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
+        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
+        self.action_Open = QtWidgets.QAction(MainWindow)
+        self.action_Open.setObjectName("action_Open")
+        self.actionEx_it = QtWidgets.QAction(MainWindow)
+        self.actionEx_it.setObjectName("actionEx_it")
+        self.action_Merge_Files = QtWidgets.QAction(MainWindow)
+        self.action_Merge_Files.setObjectName("action_Merge_Files")
+        self.actionNext = QtWidgets.QAction(MainWindow)
+        self.actionNext.setObjectName("actionNext")
+        self.actionPrev = QtWidgets.QAction(MainWindow)
+        self.actionPrev.setObjectName("actionPrev")
+        self.actionTimespan = QtWidgets.QAction(MainWindow)
+        self.actionTimespan.setObjectName("actionTimespan")
+        self.actionZoom_Out = QtWidgets.QAction(MainWindow)
+        self.actionZoom_Out.setObjectName("actionZoom_Out")
+        self.menuF_ile.addAction(self.action_Open)
+        self.menuF_ile.addAction(self.actionEx_it)
+        self.menu_Tools.addAction(self.action_Merge_Files)
+        self.menu_Tools.addAction(self.actionZoom_Out)
+        self.menuMove.addAction(self.actionTimespan)
+        self.menuMove.addAction(self.actionNext)
+        self.menuMove.addAction(self.actionPrev)
+        self.menuBar.addAction(self.menuF_ile.menuAction())
+        self.menuBar.addAction(self.menu_Tools.menuAction())
+        self.menuBar.addAction(self.menuMove.menuAction())
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.menuF_ile.setTitle(_translate("MainWindow", "&File"))
+        self.menu_Tools.setTitle(_translate("MainWindow", "&View"))
+        self.menuMove.setTitle(_translate("MainWindow", "Move"))
+        self.action_Open.setText(_translate("MainWindow", "&Open"))
+        self.actionEx_it.setText(_translate("MainWindow", "E&xit"))
+        self.action_Merge_Files.setText(_translate("MainWindow", "&Zoom In"))
+        self.actionNext.setText(_translate("MainWindow", "Next"))
+        self.actionPrev.setText(_translate("MainWindow", "Prev"))
+        self.actionTimespan.setText(_translate("MainWindow", "Timespan"))
+        self.actionZoom_Out.setText(_translate("MainWindow", "Zoom Out"))
+
